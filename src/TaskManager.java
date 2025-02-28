@@ -1,8 +1,7 @@
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
-public class NaskManager {
+public class TaskManager {
 
     HashMap<Integer,Task> taskMap = new HashMap<>();
     HashMap<Integer,SubTask> subTaskMap = new HashMap<>();
@@ -178,11 +177,5 @@ public class NaskManager {
         } else {
             epic.setStatus(Status.IN_PROGRESS);
         }
-
-
-
     }
-
-
-
 }

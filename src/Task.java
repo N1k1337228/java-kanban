@@ -19,10 +19,7 @@ public class Task {
     Status getStatus () {
         return status;
     }
-
     int getId(){
         return id;
     }
-
-
 }

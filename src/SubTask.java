@@ -5,7 +5,6 @@ public class SubTask extends Task{
         super(name,description,id);
         this.EpicId = EpicId;
     }
-
     public int getEpicId(){
         return EpicId;
     }
