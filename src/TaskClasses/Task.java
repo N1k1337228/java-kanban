@@ -1,25 +1,30 @@
+package TaskClasses;
+
 public class Task {
     protected String name;
     protected String description;
     protected int id;
     protected Status status;
 
-    Task (String name, String description, int id) {
-
+    public Task(String name, String description) {
         this.name = name;
         this.description = description;
-        this.id = id;
         status = Status.NEW;
     }
 
-    void setStatus (Status status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
-    Status getStatus () {
+    public Status getStatus() {
         return status;
     }
-    int getId(){
+
+    public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
