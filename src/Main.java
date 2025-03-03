@@ -1,8 +1,8 @@
-import Manager.TaskManager;
-import TaskClasses.Epic;
-import TaskClasses.Status;
-import TaskClasses.SubTask;
-import TaskClasses.Task;
+import manager.TaskManager;
+import taskclasses.Epic;
+import taskclasses.Status;
+import taskclasses.SubTask;
+import taskclasses.Task;
 
 public class Main {
 
@@ -48,7 +48,7 @@ public class Main {
         System.out.println(epic1.getStatus());
         subTask1.setStatus(Status.DONE);
         subTask2.setStatus(Status.DONE);
-        taskManager.updateStatus(epic1);
+        taskManager.updateEpic(epic1);
         System.out.println(epic1.getStatus());
 
 

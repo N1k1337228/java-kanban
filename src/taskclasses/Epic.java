@@ -1,4 +1,4 @@
-package TaskClasses;
+package taskclasses;
 
 import java.util.ArrayList;
 
