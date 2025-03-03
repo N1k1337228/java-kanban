@@ -14,13 +14,11 @@ public class TaskManager {
     protected HashMap<Integer, SubTask> subTaskMap = new HashMap<>();
     protected HashMap<Integer, Epic> epicMap = new HashMap<>();
 
-
     private int idCounter = 1;
 
-    public int generateId() {
+    private int generateId() {
         return idCounter++;
     }
-
 
     public ArrayList<Task> getTaskList() {
         return new ArrayList<>(taskMap.values());
@@ -98,6 +96,9 @@ public class TaskManager {
         if (subTask != null && subTaskMap.containsKey(subTask.getId())) {
             subTaskMap.put(subTask.getId(), subTask);
         }
+        if (subTask == null) {
+            return;
+        }
         epicMap.get(subTask.getEpicId()).addSubTasksId(subTask.getId());
         updateStatus(epicMap.get(subTask.getEpicId()));
     }
@@ -124,7 +125,7 @@ public class TaskManager {
 
     public void removeEpicOnId(int id) {
         if (!epicMap.containsKey(id)) {
-            return; // Если эпика нет, просто выходим
+            return;
         }
         epicMap.remove(id);
         ArrayList<Integer> subTaskIdsToRemove = new ArrayList<>();
@@ -133,13 +134,14 @@ public class TaskManager {
                 subTaskIdsToRemove.add(subTask.getId());
             }
         }
-        subTaskIdsToRemove.clear();
-
+        for (Integer subTaskId : subTaskIdsToRemove) {
+            subTaskMap.remove(subTaskId);
+        }
     }
 
     public void removeSubTaskOnId(int id) {
         if (subTaskMap.containsKey(id)) {
-            SubTask subTask = subTaskMap.remove(id); // Удаляем подзадачу
+            SubTask subTask = subTaskMap.remove(id);
             if (subTask != null) {
                 Epic epic = epicMap.get(subTask.getEpicId()); // Получаем эпик, к которому относилась подзадача
                 if (epic != null) {
@@ -152,9 +154,12 @@ public class TaskManager {
 
     }
 
-    public void updateStatus(Epic epic) {
+    private void updateStatus(Epic epic) {
         if (epic != null && epic.getSubTasksId().isEmpty()) {
             epic.setStatus(Status.NEW);
+            return;
+        }
+        if (epic == null || epic.getSubTasksId() == null) { // Проверка на null
             return;
         }
         boolean statusDone = true;
@@ -167,7 +172,6 @@ public class TaskManager {
                 statusNew = false;
             }
         }
-
         if (statusDone) {
             epic.setStatus(Status.DONE);
         } else if (statusNew) {
