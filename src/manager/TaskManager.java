@@ -128,14 +128,10 @@ public class TaskManager {
             return;
         }
         epicMap.remove(id);
-        ArrayList<Integer> subTaskIdsToRemove = new ArrayList<>();
-        for (SubTask subTask : subTaskMap.values()) {
-            if (subTask.getEpicId() == id) {
-                subTaskIdsToRemove.add(subTask.getId());
+        for (Integer subTaskId : new ArrayList<>(subTaskMap.keySet())) {
+            if (subTaskMap.get(subTaskId).getEpicId() == id) {
+                subTaskMap.remove(subTaskId);
             }
-        }
-        for (Integer subTaskId : subTaskIdsToRemove) {
-            subTaskMap.remove(subTaskId);
         }
     }
 
