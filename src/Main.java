@@ -1,4 +1,4 @@
-import manager.TaskManager;
+import manager.inMemoryTaskManager;
 import taskclasses.Epic;
 import taskclasses.Status;
 import taskclasses.SubTask;
@@ -7,7 +7,7 @@ import taskclasses.Task;
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager taskManager = new TaskManager(); // Менеджер задач
+        inMemoryTaskManager taskManager = new inMemoryTaskManager(); // Менеджер задач
 
         // Создаём две обычные задачи (ID и статус создаются автоматически)
         Task task1 = new Task("Задача 1", "Описание задачи 1");
