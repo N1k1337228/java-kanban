@@ -19,39 +19,33 @@ class InMemoryTaskManagerTest {
     SubTask subTask1;
     SubTask subTask2;
     SubTask subTask3;
+
     @BeforeEach
     void createTaskManager () {
          taskManager = Managers.getDefault();
          task1 = new Task("Задача 1", "Описание задачи 1");
          taskManager.createTask(task1);
 
-
          epic1 = new Epic("Эпик 1", "Описание эпика 1");
-         epic2 = new Epic("Эпик 2", "Описание эпика 2");
          taskManager.createEpic(epic1);
-         taskManager.createEpic(epic2);
 
          subTask1 = new SubTask("Подзадача 1.1", "Описание", epic1.getId());
-         subTask2 = new SubTask("Подзадача 1.2", "Описание", epic1.getId());
-         subTask3 = new SubTask("Подзадача 2.1", "Описание", epic2.getId());
          taskManager.createSubTask(subTask1);
-         taskManager.createSubTask(subTask2);
-         taskManager.createSubTask(subTask3);
     }
 
     @Test
-    void createTaskTest() {
-        Assertions.assertNotNull(taskManager.getTaskList());
+    void createTaskTest () {
+        Assertions.assertTrue(taskManager.getTaskList().contains(task1));
     }
 
     @Test
-    void createSubTaskTest() {
-        Assertions.assertNotNull(taskManager.getSubTaskList());
+    void createSubTaskTest () {
+        Assertions.assertTrue(taskManager.getSubTaskList().contains(subTask1));
     }
 
     @Test
-    void createEpicTest() {
-        Assertions.assertNotNull(taskManager.getEpicList());
+    void createEpicTest () {
+        Assertions.assertTrue(taskManager.getEpicList().contains(epic1));
     }
 
     @Test
@@ -80,5 +74,45 @@ class InMemoryTaskManagerTest {
         assertEquals(task.getStatus(), retrievedTask.getStatus(), "Статус задачи изменился");
     }
 
+    @Test
+    void managersTest () {
+        Assertions.assertNotNull(Managers.getDefault());
+        Assertions.assertNotNull(Managers.getDefaultHistory());
+    }
 
+    @Test
+    void removeEpicsTest () {
+        taskManager.removeEpics();
+        Assertions.assertTrue(taskManager.getEpicList().isEmpty());
+    }
+
+    @Test
+    void removeSubTaskTest () {
+        taskManager.removeSubTask();
+        Assertions.assertTrue(taskManager.getSubTaskList().isEmpty());
+    }
+
+    @Test
+    void removeTasksTest () {
+        taskManager.removeTask();
+        Assertions.assertTrue(taskManager.getTaskList().isEmpty());
+    }
+
+    @Test
+    void removeTaskOnId () {
+        taskManager.removeTaskOnId(task1.getId());
+        Assertions.assertFalse(taskManager.getTaskList().contains(task1));
+    }
+
+    @Test
+    void removeSubTaskOnId () {
+        taskManager.removeSubTaskOnId(subTask1.getId());
+        Assertions.assertFalse(taskManager.getSubTaskList().contains(subTask1));
+    }
+
+    @Test
+    void removeEpicOnId () {
+        taskManager.removeEpicOnId(epic1.getId());
+        Assertions.assertFalse(taskManager.getEpicList().contains(epic1));
+    }
 }

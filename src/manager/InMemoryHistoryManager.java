@@ -9,21 +9,17 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) {
-        if (historyOfTask.size() == 10) {
+        final int sizeOfHistoryTask = 10;
+        if (historyOfTask.size() >= sizeOfHistoryTask) {
             historyOfTask.remove(0);
-            historyOfTask.add(-1,task);
-        } else if (historyOfTask.size() == 0) {
             historyOfTask.add(task);
-        } else {
-            historyOfTask.add(-1,task);
+            return;
         }
+        historyOfTask.add(task);
     }
 
     @Override
     public ArrayList<Task> getHistory() {
-        if (historyOfTask == null) {
-            return  new ArrayList<>();
-        }
-        return  historyOfTask;
+        return new  ArrayList<>(historyOfTask);
     }
 }

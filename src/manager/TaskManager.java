@@ -45,7 +45,7 @@ public interface TaskManager {
 
     public void removeSubTaskOnId(int id);
 
-    //public ArrayList<Task> getHistory();
+    public ArrayList<Task> getHistory();
 
 
 }

@@ -8,16 +8,16 @@ import taskclasses.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class inMemoryTaskManager implements  TaskManager{
+public class InMemoryTaskManager implements  TaskManager{
 
     protected HashMap<Integer, Task> taskMap = new HashMap<>();
     protected HashMap<Integer, SubTask> subTaskMap = new HashMap<>();
     protected HashMap<Integer, Epic> epicMap = new HashMap<>();
-    HistoryManager historyManager = Managers.getDefaultHistory();
+    protected HistoryManager historyManager = Managers.getDefaultHistory();
     private int idCounter = 1;
 
-    public void getHistory () {
-        historyManager.getHistory();
+    public ArrayList<Task> getHistory () {
+        return historyManager.getHistory();
     }
 
     private int generateId() {
@@ -62,20 +62,23 @@ public class inMemoryTaskManager implements  TaskManager{
 
     @Override
     public Task getTask(int id) {
-        historyManager.add(taskMap.get(id));
-        return taskMap.get(id);
+        Task task = taskMap.get(id);
+        historyManager.add(task);
+        return task;
     }
 
     @Override
     public SubTask getSubTask(int id) {
-        historyManager.add(subTaskMap.get(id));
-        return subTaskMap.get(id);
+        SubTask subTask = subTaskMap.get(id);
+        historyManager.add(subTask);
+        return subTask;
     }
 
     @Override
     public Epic getEpic(int id) {
-        historyManager.add(epicMap.get(id));
-        return epicMap.get(id);
+        Epic epic = epicMap.get(id);
+        historyManager.add(epic);
+        return epic;
     }
 
     @Override
@@ -94,7 +97,7 @@ public class inMemoryTaskManager implements  TaskManager{
     public void createSubTask(SubTask subTask) {
         subTask.setId(generateId());
         subTaskMap.put(subTask.getId(), subTask);
-        epicMap.get(subTask.getEpicId()).addSubTasksId(subTask.getId());
+        epicMap.get(subTask.getEpicId()).addSubTasksId(subTask);
         updateStatus(epicMap.get(subTask.getEpicId()));
     }
 
@@ -121,7 +124,7 @@ public class inMemoryTaskManager implements  TaskManager{
         if (subTask == null) {
             return;
         }
-        epicMap.get(subTask.getEpicId()).addSubTasksId(subTask.getId());
+        epicMap.get(subTask.getEpicId()).addSubTasksId(subTask);
         updateStatus(epicMap.get(subTask.getEpicId()));
     }
 

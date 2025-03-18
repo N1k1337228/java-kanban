@@ -1,4 +1,4 @@
-import manager.inMemoryTaskManager;
+import manager.InMemoryTaskManager;
 import taskclasses.Epic;
 import taskclasses.Status;
 import taskclasses.SubTask;
@@ -7,7 +7,7 @@ import taskclasses.Task;
 public class Main {
 
     public static void main(String[] args) {
-        inMemoryTaskManager taskManager = new inMemoryTaskManager(); // Менеджер задач
+        InMemoryTaskManager taskManager = new InMemoryTaskManager(); // Менеджер задач
 
         // Создаём две обычные задачи (ID и статус создаются автоматически)
         Task task1 = new Task("Задача 1", "Описание задачи 1");
@@ -39,10 +39,10 @@ public class Main {
 
         taskManager.createSubTask(subTask1);
         taskManager.createSubTask(subTask2);
-        epic1.addSubTasksId(subTask1.getId());
-        epic1.addSubTasksId(subTask2.getId());
+        epic1.addSubTasksId(subTask1);
+        epic1.addSubTasksId(subTask2);
         taskManager.createSubTask(subTask3);
-        epic2.addSubTasksId(subTask3.getId());
+        epic2.addSubTasksId(subTask3);
         System.out.println(taskManager.getSubTaskList());
 
         System.out.println(epic1.getStatus());
