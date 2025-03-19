@@ -16,6 +16,7 @@ public class InMemoryTaskManager implements TaskManager {
     protected HistoryManager historyManager = Managers.getDefaultHistory();
     private int idCounter = 1;
 
+    @Override
     public ArrayList<Task> getHistory() {
         return historyManager.getHistory();
     }
@@ -117,7 +118,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateSabTask(SubTask subTask) {
-
         if (subTask != null && subTaskMap.containsKey(subTask.getId())) {
             subTaskMap.put(subTask.getId(), subTask);
         }
@@ -154,8 +154,8 @@ public class InMemoryTaskManager implements TaskManager {
         if (!epicMap.containsKey(id)) {
             return;
         }
-        epicMap.remove(id);
-        for (Integer subTaskId : new ArrayList<>(subTaskMap.keySet())) {
+        Epic epic = epicMap.remove(id);
+        for (Integer subTaskId : epic.getSubTasksId()) {
             if (subTaskMap.get(subTaskId).getEpicId() == id) {
                 subTaskMap.remove(subTaskId);
             }

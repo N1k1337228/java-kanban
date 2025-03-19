@@ -42,7 +42,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void TaskInHistoryNotСhangedTest() {
+    void TaskInHistoryNotChangedTest() {
         manager.add(task);
         Assertions.assertEquals(task.getName(), manager.getHistory().get(task.getId()).getName());
         Assertions.assertEquals(task.getDescription(), manager.getHistory().get(task.getId()).getDescription());

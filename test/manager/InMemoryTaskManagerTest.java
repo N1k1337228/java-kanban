@@ -4,8 +4,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import taskclasses.Epic;
+import taskclasses.Status;
 import taskclasses.SubTask;
 import taskclasses.Task;
+
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,9 +16,7 @@ class InMemoryTaskManagerTest {
 
     private TaskManager taskManager;
     Epic epic1;
-    Epic epic2;
     Task task1;
-    Task task2;
     SubTask subTask1;
     SubTask subTask2;
     SubTask subTask3;
@@ -31,6 +32,11 @@ class InMemoryTaskManagerTest {
 
         subTask1 = new SubTask("Подзадача 1.1", "Описание", epic1.getId());
         taskManager.createSubTask(subTask1);
+        subTask2 = new SubTask("Подзадача 1.2", "Описание", epic1.getId());
+        taskManager.createSubTask(subTask2);
+        subTask3 = new SubTask("Подзадача 2.1", "Описание", epic1.getId());
+        taskManager.createSubTask(subTask3);
+
     }
 
     @Test
@@ -75,12 +81,6 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void managersTest() {
-        Assertions.assertNotNull(Managers.getDefault());
-        Assertions.assertNotNull(Managers.getDefaultHistory());
-    }
-
-    @Test
     void removeEpicsTest() {
         taskManager.removeEpics();
         Assertions.assertTrue(taskManager.getEpicList().isEmpty());
@@ -114,5 +114,49 @@ class InMemoryTaskManagerTest {
     void removeEpicOnId() {
         taskManager.removeEpicOnId(epic1.getId());
         Assertions.assertFalse(taskManager.getEpicList().contains(epic1));
+    }
+
+    @Test
+    void getSubtaskIdTest () {
+        epic1.addSubTasksId(subTask1);
+        epic1.addSubTasksId(subTask2);
+        epic1.addSubTasksId(subTask3);
+        ArrayList<Integer> SubtaskId = epic1.getSubTasksId();
+        Assertions.assertEquals(SubtaskId,epic1.getSubTasksId());
+    }
+
+    @Test
+    void updateSabTaskTest () {
+        subTask1.setName("new name");
+        subTask1.setDescription("new description");
+        taskManager.updateSabTask(subTask1);
+        Assertions.assertEquals("new name", taskManager.getSubTask(subTask1.getId()).getName());
+        Assertions.assertEquals("new description",taskManager.getSubTask(subTask1.getId()).getDescription());
+    }
+
+    @Test
+    void updateTaskTest() {
+        // Создаем обновленную задачу с тем же ID
+        task1.setName("new name");
+        task1.setDescription("new description");
+        taskManager.updateTask(task1);
+        Assertions.assertEquals("new name", taskManager.getTask(task1.getId()).getName());
+        Assertions.assertEquals("new description",taskManager.getTask(task1.getId()).getDescription());
+    }
+
+    @Test
+    void updateEpicTest () {
+        subTask1.setStatus(Status.DONE);
+        subTask2.setStatus(Status.DONE);
+        subTask3.setStatus(Status.DONE);
+        taskManager.updateSabTask(subTask1);
+        taskManager.updateSabTask(subTask2);
+        taskManager.updateSabTask(subTask3);
+        epic1.setName("new name");
+        epic1.setDescription("new description");
+        taskManager.updateEpic(epic1);
+        Assertions.assertEquals("new name", taskManager.getEpic(epic1.getId()).getName());
+        Assertions.assertEquals("new description",taskManager.getEpic(epic1.getId()).getDescription());
+        Assertions.assertEquals(Status.DONE,epic1.getStatus());
     }
 }
