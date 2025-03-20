@@ -117,21 +117,21 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void getSubtaskIdTest () {
+    void getSubtaskIdTest() {
         epic1.addSubTasksId(subTask1);
         epic1.addSubTasksId(subTask2);
         epic1.addSubTasksId(subTask3);
-        ArrayList<Integer> SubtaskId = epic1.getSubTasksId();
-        Assertions.assertEquals(SubtaskId,epic1.getSubTasksId());
+        ArrayList<Integer> subTaskId = epic1.getSubTasksId();
+        Assertions.assertEquals(subTaskId, epic1.getSubTasksId());
     }
 
     @Test
-    void updateSabTaskTest () {
+    void updateSabTaskTest() {
         subTask1.setName("new name");
         subTask1.setDescription("new description");
         taskManager.updateSabTask(subTask1);
         Assertions.assertEquals("new name", taskManager.getSubTask(subTask1.getId()).getName());
-        Assertions.assertEquals("new description",taskManager.getSubTask(subTask1.getId()).getDescription());
+        Assertions.assertEquals("new description", taskManager.getSubTask(subTask1.getId()).getDescription());
     }
 
     @Test
@@ -141,11 +141,11 @@ class InMemoryTaskManagerTest {
         task1.setDescription("new description");
         taskManager.updateTask(task1);
         Assertions.assertEquals("new name", taskManager.getTask(task1.getId()).getName());
-        Assertions.assertEquals("new description",taskManager.getTask(task1.getId()).getDescription());
+        Assertions.assertEquals("new description", taskManager.getTask(task1.getId()).getDescription());
     }
 
     @Test
-    void updateEpicTest () {
+    void updateEpicTest() {
         subTask1.setStatus(Status.DONE);
         subTask2.setStatus(Status.DONE);
         subTask3.setStatus(Status.DONE);
@@ -156,7 +156,16 @@ class InMemoryTaskManagerTest {
         epic1.setDescription("new description");
         taskManager.updateEpic(epic1);
         Assertions.assertEquals("new name", taskManager.getEpic(epic1.getId()).getName());
-        Assertions.assertEquals("new description",taskManager.getEpic(epic1.getId()).getDescription());
-        Assertions.assertEquals(Status.DONE,epic1.getStatus());
+        Assertions.assertEquals("new description", taskManager.getEpic(epic1.getId()).getDescription());
+        Assertions.assertEquals(Status.DONE, epic1.getStatus());
+    }
+
+    @Test
+    void getSubTaskListOfEpicOnIdTest() {
+        ArrayList<SubTask> subTasks = new ArrayList<>();
+        subTasks.add(subTask1);
+        subTasks.add(subTask2);
+        subTasks.add(subTask3);
+        Assertions.assertEquals(subTasks, taskManager.getSubTaskListOfEpicOnId(epic1.getId()));
     }
 }
