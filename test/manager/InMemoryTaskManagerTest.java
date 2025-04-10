@@ -108,6 +108,7 @@ class InMemoryTaskManagerTest {
     void removeSubTaskOnId() {
         taskManager.removeSubTaskOnId(subTask1.getId());
         Assertions.assertFalse(taskManager.getSubTaskList().contains(subTask1));
+        Assertions.assertFalse(taskManager.getEpic(subTask1.getEpicId()).getSubTasksId().contains(subTask1.getId()));
     }
 
     @Test

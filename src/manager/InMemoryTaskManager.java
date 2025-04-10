@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class InMemoryTaskManager implements TaskManager {
-
     protected HashMap<Integer, Task> taskMap = new HashMap<>();
     protected HashMap<Integer, SubTask> subTaskMap = new HashMap<>();
     protected HashMap<Integer, Epic> epicMap = new HashMap<>();
@@ -58,7 +57,6 @@ public class InMemoryTaskManager implements TaskManager {
             epic.removeSubTasksId();
             updateStatus(epic);
         }
-
     }
 
     @Override
@@ -147,6 +145,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void removeTaskOnId(int id) {
         if (taskMap.containsKey(id)) {
             taskMap.remove(id);
+            historyManager.remove(id);
         }
     }
 
@@ -158,6 +157,7 @@ public class InMemoryTaskManager implements TaskManager {
         for (Integer subTaskId : epic.getSubTasksId()) {
             if (subTaskMap.get(subTaskId).getEpicId() == id) {
                 subTaskMap.remove(subTaskId);
+                historyManager.remove(id);
             }
         }
     }
@@ -170,12 +170,11 @@ public class InMemoryTaskManager implements TaskManager {
                 Epic epic = epicMap.get(subTask.getEpicId()); // Получаем эпик, к которому относилась подзадача
                 if (epic != null) {
                     epic.getSubTasksId().remove(Integer.valueOf(id));
+                    historyManager.remove(id);
                     updateStatus(epic); // Обновляем статус эпика
                 }
             }
-
         }
-
     }
 
     private void updateStatus(Epic epic) {
