@@ -8,7 +8,7 @@ import taskclasses.Task;
 public class Main {
 
     public static void main(String[] args) {
-        /*InMemoryTaskManager taskManager = new InMemoryTaskManager(); // Менеджер задач
+        InMemoryTaskManager taskManager = new InMemoryTaskManager(); // Менеджер задач
 
         // Создаём две обычные задачи (ID и статус создаются автоматически)
         Task task1 = new Task("Задача 1", "Описание задачи 1");
@@ -51,16 +51,6 @@ public class Main {
         subTask2.setStatus(Status.DONE);
         taskManager.updateEpic(epic1);
         System.out.println(epic1.getStatus());
-        */
-        InMemoryHistoryManager manager = new InMemoryHistoryManager();
-        Task task1 = new Task("1", "4");
-        Task task2 = new Task("2", "5");
-        Task task3 = new Task("3", "6");
-        manager.add(task1);
-        manager.add(task2);
-        manager.add(task3);
-        System.out.println(manager.getHistory());
-
     }
 }
 
