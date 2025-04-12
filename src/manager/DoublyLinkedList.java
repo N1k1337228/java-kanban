@@ -1,28 +1,31 @@
 package manager;
 
+import taskclasses.Task;
 
+import java.util.HashMap;
 
-public class DoublyLinkedList<T> {
-    public Node<T> head;
-    public Node<T> tail;
-    private int size = 0;
+public class DoublyLinkedList {
+    private HashMap<Integer, Node> historyOfTask = new HashMap<>();
+    private Node head;
+    private Node tail;
 
-    public void linkLast(T element) {
-        final Node<T> oldTail = tail;
-        final Node<T> newNode = new Node<>(oldTail, element, null);
-        tail = newNode;
-        if (oldTail == null) {
+    public void linkLast(Task element) {
+        historyOfTask.remove(element.getId());
+        final Node newNode = new Node(tail, element, null);
+        if (tail == null) {
             head = newNode;
         } else {
-            oldTail.next = newNode;
+            tail.next = newNode;
         }
-        size++;
+        tail = newNode;
+        historyOfTask.put(element.getId(), newNode);
     }
 
-    public void removeNode(Node<T> node) {
+    public void removeNode(int id) {
+        Node node = historyOfTask.get(id);
         if (node == null) return;
-        final Node<T> next = node.next;
-        final Node<T> prev = node.prev;
+        final Node next = node.next;
+        final Node prev = node.prev;
         if (prev == null) {
             head = next;
         } else {
@@ -36,15 +39,19 @@ public class DoublyLinkedList<T> {
             node.next = null;
         }
         node.data = null;
-        size--;
+        historyOfTask.remove(id);
     }
 
-    public int getSize() {
-        return size;
-    }
-
-    public Node<T> getHead() {
+    public Node getHead() {
         return head;
+    }
+
+    public Node getTail() {
+        return tail;
+    }
+
+    public int getHistoryOfTaskSize() {
+        return historyOfTask.size();
     }
 }
 
