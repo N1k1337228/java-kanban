@@ -50,8 +50,6 @@ public class Main {
         subTask2.setStatus(Status.DONE);
         taskManager.updateEpic(epic1);
         System.out.println(epic1.getStatus());
-
-
     }
 }
 
