@@ -42,20 +42,17 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeTask() {
         taskMap.clear();
-        historyManager.getHistoryTaskList().clear();
     }
 
     @Override
     public void removeEpics() {
         epicMap.clear();
         subTaskMap.clear();
-        historyManager.getHistoryTaskList().clear();
     }
 
     @Override
     public void removeSubTask() {
         subTaskMap.clear();
-        historyManager.getHistoryTaskList().clear();
         for (Epic epic : epicMap.values()) {
             epic.removeSubTasksId();
             updateStatus(epic);

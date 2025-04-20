@@ -1,5 +1,7 @@
 package manager;
+
 import taskclasses.Task;
+
 import java.util.ArrayList;
 
 
@@ -11,7 +13,6 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (task == null) {
             return;
         }
-        historyTaskList.removeNode(task.getId());
         historyTaskList.linkLast(task);
     }
 
@@ -29,10 +30,6 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public void remove(int id) {
         historyTaskList.removeNode(id);
-    }
-
-    public DoublyLinkedList getHistoryTaskList() {
-        return historyTaskList;
     }
 }
 

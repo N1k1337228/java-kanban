@@ -42,26 +42,8 @@ public class DoublyLinkedList {
         historyOfTask.remove(id);
     }
 
-    public void clear() {
-        Node current = head;
-        while (current != null) {
-            Node next = current.next;
-            current.data = null;
-            current.prev = null;
-            current.next = null;
-            current = next;
-        }
-        head = null;
-        tail = null;
-        historyOfTask.clear();
-    }
-
     public Node getHead() {
         return head;
-    }
-
-    public Node getTail() {
-        return tail;
     }
 
 }
