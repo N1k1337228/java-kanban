@@ -29,7 +29,6 @@ class InMemoryHistoryManagerTest {
         task3 = new Task("3", "6");
         task3.setId(4);
         manager = new InMemoryHistoryManager();
-        manager.add(task);
         manager.add(task1);
         manager.add(task2);
         manager.add(task3);
@@ -62,9 +61,10 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void TaskInHistoryNotChangedTest() {
-        Assertions.assertEquals(task.getName(), manager.getHistory().get(0).getName());
-        Assertions.assertEquals(task.getDescription(), manager.getHistory().get(0).getDescription());
-        Assertions.assertEquals(task.getStatus(), manager.getHistory().get(0).getStatus());
+        manager.add(task);
+        Assertions.assertEquals(task.getName(), manager.getHistory().get(3).getName());
+        Assertions.assertEquals(task.getDescription(), manager.getHistory().get(3).getDescription());
+        Assertions.assertEquals(task.getStatus(), manager.getHistory().get(3).getStatus());
     }
 
     @Test
