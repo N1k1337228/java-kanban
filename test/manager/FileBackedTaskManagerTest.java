@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import taskclasses.Epic;
 import taskclasses.SubTask;
 import taskclasses.Task;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -66,5 +65,4 @@ public class FileBackedTaskManagerTest {
         Assertions.assertFalse(fileLoad.taskMap.isEmpty());
         Assertions.assertFalse(fileLoad.subTaskMap.isEmpty());
     }
-
 }
