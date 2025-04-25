@@ -1,6 +1,6 @@
 package manager;
 
-import Exceptons.ManagerSaveException;
+import exceptons.ManagerSaveException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
