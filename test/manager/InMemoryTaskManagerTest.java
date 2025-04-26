@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryTaskManagerTest {
-
     private TaskManager taskManager;
     Epic epic1;
     Task task1;
@@ -108,6 +107,7 @@ class InMemoryTaskManagerTest {
     void removeSubTaskOnId() {
         taskManager.removeSubTaskOnId(subTask1.getId());
         Assertions.assertFalse(taskManager.getSubTaskList().contains(subTask1));
+        Assertions.assertFalse(taskManager.getEpic(subTask1.getEpicId()).getSubTasksId().contains(subTask1.getId()));
     }
 
     @Test

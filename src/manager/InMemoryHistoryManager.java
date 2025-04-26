@@ -4,22 +4,33 @@ import taskclasses.Task;
 
 import java.util.ArrayList;
 
+
 public class InMemoryHistoryManager implements HistoryManager {
-    private ArrayList<Task> historyOfTask = new ArrayList<>();
+    private DoublyLinkedList historyTaskList = new DoublyLinkedList();
 
     @Override
     public void add(Task task) {
-        final int sizeOfHistoryTask = 10;
-        if (historyOfTask.size() >= sizeOfHistoryTask) {
-            historyOfTask.remove(0);
-            historyOfTask.add(task);
+        if (task == null) {
             return;
         }
-        historyOfTask.add(task);
+        historyTaskList.linkLast(task);
     }
 
     @Override
     public ArrayList<Task> getHistory() {
-        return new ArrayList<>(historyOfTask);
+        ArrayList<Task> result = new ArrayList<>();
+        Node current = historyTaskList.getHead();
+        while (current != null) {
+            result.add(current.data);
+            current = current.next;
+        }
+        return result;
+    }
+
+    @Override
+    public void remove(int id) {
+        historyTaskList.removeNode(id);
     }
 }
+
+
