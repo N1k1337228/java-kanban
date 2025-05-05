@@ -13,7 +13,7 @@ public class InMemoryTaskManager implements TaskManager {
     protected HashMap<Integer, SubTask> subTaskMap = new HashMap<>();
     protected HashMap<Integer, Epic> epicMap = new HashMap<>();
     protected InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
-    private int idCounter = 1;
+    protected int idCounter = 1;
 
     @Override
     public ArrayList<Task> getHistory() {

@@ -7,11 +7,13 @@ public class Task {
     protected String description;
     protected int id;
     protected Status status;
+    protected TaskType type;
 
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
         status = Status.NEW;
+        type = TaskType.TASK;
     }
 
     public void setStatus(Status status) {
@@ -20,6 +22,10 @@ public class Task {
 
     public Status getStatus() {
         return status;
+    }
+
+    public TaskType getType() {
+        return type;
     }
 
     public int getId() {
@@ -57,5 +63,14 @@ public class Task {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%d,TASK,%s,%s,%s%n",
+                id,
+                name,
+                status,
+                description);
     }
 }
