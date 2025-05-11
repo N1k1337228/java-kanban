@@ -7,6 +7,7 @@ public class Epic extends Task {
 
     public Epic(String name, String description) {
         super(name, description);
+        type = TaskType.EPIC;
     }
 
     public void addSubTasksId(SubTask subTask) {
@@ -20,5 +21,14 @@ public class Epic extends Task {
 
     public void removeSubTasksId() {
         subTasksId.clear();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%d,EPIC,%s,%s,%s%n",
+                id,
+                name,
+                status,
+                description);
     }
 }
