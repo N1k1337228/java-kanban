@@ -33,6 +33,12 @@ public class InMemoryTaskManager implements TaskManager {
         return new ArrayList<>(prioritizedTasks);
     }
 
+    public boolean checkIntersectionTasks(Task task) {
+        return getPrioritizedTasks().stream()
+                .allMatch(task1 -> task.getEndTime().isBefore(task1.getStartTime()) ||
+                        task.getStartTime().isAfter(task1.getEndTime()));
+    }
+
     public boolean checkIntersectionForTwoTasks(Task task1, Task task2) {
         return task1.getEndTime().isBefore(task2.getStartTime()) ||
                 task1.getStartTime().isAfter(task2.getEndTime());
@@ -105,10 +111,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void createTask(Task task) {
-        if (checkIntersectionTasks(task)) {
-            task.setId(generateId());
-            taskMap.put(task.getId(), task);
+        if (!checkIntersectionTasks(task)) {
+            return;
         }
+        task.setId(generateId());
+        taskMap.put(task.getId(), task);
     }
 
     @Override
@@ -119,18 +126,13 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void createSubTask(SubTask subTask) {
-        if (checkIntersectionTasks(subTask)) {
-            subTask.setId(generateId());
-            subTaskMap.put(subTask.getId(), subTask);
-            epicMap.get(subTask.getEpicId()).addSubTasksId(subTask);
-            updateStatus(epicMap.get(subTask.getEpicId()));
+        if (!checkIntersectionTasks(subTask)) {
+            return;
         }
-    }
-
-    public boolean checkIntersectionTasks(Task task) {
-        return getPrioritizedTasks().stream()
-                .allMatch(task1 -> task.getEndTime().isBefore(task1.getStartTime()) ||
-                        task.getStartTime().isAfter(task1.getEndTime()));
+        subTask.setId(generateId());
+        subTaskMap.put(subTask.getId(), subTask);
+        epicMap.get(subTask.getEpicId()).addSubTasksId(subTask);
+        updateStatus(epicMap.get(subTask.getEpicId()));
     }
 
     @Override
