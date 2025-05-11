@@ -1,5 +1,8 @@
 package taskclasses;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Task {
@@ -8,12 +11,19 @@ public class Task {
     protected int id;
     protected Status status;
     protected TaskType type;
+    protected LocalDateTime startTime;
+    protected Duration duration;
+    protected LocalDateTime endTime;
 
-    public Task(String name, String description) {
+    public Task(String name, String description, long taskExecutionTime) {
         this.name = name;
         this.description = description;
         status = Status.NEW;
         type = TaskType.TASK;
+        startTime = LocalDateTime.now();
+        this.duration = Duration.ofMinutes(taskExecutionTime);
+        endTime = startTime.plus(duration);
+
     }
 
     public void setStatus(Status status) {
@@ -26,6 +36,26 @@ public class Task {
 
     public TaskType getType() {
         return type;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime time) {
+        this.startTime = time.plusYears(0);
+    }
+
+    public void setEndTime(LocalDateTime time) {
+        this.endTime = time.plusYears(0);
+    }
+
+    public void setDuration(long duration) {
+        this.duration = Duration.ofMinutes(duration);
     }
 
     public int getId() {
@@ -67,10 +97,14 @@ public class Task {
 
     @Override
     public String toString() {
-        return String.format("%d,TASK,%s,%s,%s%n",
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd_HH:mm");
+        return String.format("%d,TASK,%s,%s,%s,%s,%s,%d%n",
                 id,
                 name,
                 status,
-                description);
+                description,
+                startTime.format(formatter),
+                endTime.format(formatter),
+                duration.toMinutes());
     }
 }

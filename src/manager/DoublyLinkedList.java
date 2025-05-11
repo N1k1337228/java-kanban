@@ -10,7 +10,7 @@ public class DoublyLinkedList {
     private Node tail;
 
     public void linkLast(Task element) {
-        historyOfTask.remove(element.getId());
+        removeNode(element.getId());
         final Node newNode = new Node(tail, element, null);
         if (tail == null) {
             head = newNode;

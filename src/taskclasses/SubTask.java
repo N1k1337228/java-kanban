@@ -1,11 +1,13 @@
 package taskclasses;
 
+import java.time.format.DateTimeFormatter;
+
 public class SubTask extends Task {
 
     private int epicId;
 
-    public SubTask(String name, String description, int epicId) {
-        super(name, description);
+    public SubTask(String name, String description, int epicId,long taskExecutionTime) {
+        super(name, description,taskExecutionTime);
         this.epicId = epicId;
         type = TaskType.SUBTASK;
     }
@@ -16,11 +18,15 @@ public class SubTask extends Task {
 
     @Override
     public String toString() {
-        return String.format("%d,SUBTASK,%s,%s,%s,%d%n",
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd_HH:mm");
+        return String.format("%d,SUBTASK,%s,%s,%s,%s,%s,%d,%d%n",
                 id,
                 name,
                 status,
                 description,
+                startTime.format(formatter),
+                endTime.format(formatter),
+                duration.toMinutes(),
                 epicId);
     }
 }

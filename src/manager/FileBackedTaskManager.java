@@ -7,8 +7,12 @@ import java.io.BufferedReader;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
@@ -19,27 +23,46 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     private Task fromString(String value) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd_HH:mm");
+        LocalDateTime startTime = null;
+        LocalDateTime endTime = null;
         String[] taskElements = value.split(",");
         int id = Integer.parseInt(taskElements[0]);
         String type = taskElements[1];
         String name = taskElements[2];
         String status = taskElements[3];
         String description = taskElements[4];
+        if (!taskElements[5].equals("null")){
+            startTime = LocalDateTime.parse(taskElements[5],formatter);
+        }
+        if (!taskElements[6].equals("null")){
+            endTime = LocalDateTime.parse(taskElements[6],formatter);
+        }
+        long duration = Long.parseLong(taskElements[7]);
         switch (TaskType.valueOf(type)) {
             case TASK:
-                Task task = new Task(name, description);
+                Task task = new Task(name,description,duration);
                 task.setId(id);
                 task.setStatus(Status.valueOf(status));
+                task.setStartTime(startTime);
+                task.setEndTime(endTime);
+                task.setDuration(duration);
                 return task;
             case EPIC:
                 Epic epic = new Epic(name, description);
                 epic.setId(id);
                 epic.setStatus(Status.valueOf(status));
+                epic.setStartTime(startTime);
+                epic.setEndTime(endTime);
+                epic.setDuration(duration);
                 return epic;
             case SUBTASK:
-                SubTask subTask = new SubTask(name, description, Integer.parseInt(taskElements[5]));
+                SubTask subTask = new SubTask(name, description, Integer.parseInt(taskElements[8]),duration);
                 subTask.setId(id);
                 subTask.setStatus(Status.valueOf(status));
+                subTask.setStartTime(startTime);
+                subTask.setEndTime(endTime);
+                subTask.setDuration(duration);
                 return subTask;
             default:
                 throw new IllegalArgumentException();
@@ -83,10 +106,18 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         allTasks.addAll(epicMap.values());
         allTasks.addAll(subTaskMap.values());
         try (FileWriter writer = new FileWriter(path.toString())) {
-            writer.write("id,type,name,status,description,epic\n");
-            for (Task task : allTasks) {
-                writer.write(task.toString());
-            }
+            writer.write("id,type,name,status,description,startTime,endTime,duration,epic\n");
+            allTasks.stream()
+                    .map(Task::toString)
+                    .forEach(line -> {
+                        try {
+                            writer.write(line);
+                        } catch (IOException e) {
+                            throw new UncheckedIOException("Ошибка записи строки", e);
+                        }
+                    });
+
+
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка сохранения данных");
         }
