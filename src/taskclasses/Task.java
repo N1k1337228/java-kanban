@@ -13,17 +13,14 @@ public class Task {
     protected TaskType type;
     protected LocalDateTime startTime;
     protected Duration duration;
-    protected LocalDateTime endTime;
 
-    public Task(String name, String description, long taskExecutionTime) {
+    public Task(String name, String description) {
         this.name = name;
         this.description = description;
         status = Status.NEW;
         type = TaskType.TASK;
-        startTime = LocalDateTime.now();
-        this.duration = Duration.ofMinutes(taskExecutionTime);
-        endTime = startTime.plus(duration);
-
+        startTime = null;
+        this.duration = Duration.ZERO;
     }
 
     public void setStatus(Status status) {
@@ -39,7 +36,7 @@ public class Task {
     }
 
     public LocalDateTime getEndTime() {
-        return endTime;
+        return startTime.plus(duration);
     }
 
     public LocalDateTime getStartTime() {
@@ -47,12 +44,12 @@ public class Task {
     }
 
     public void setStartTime(LocalDateTime time) {
-        this.startTime = time.plusYears(0);
+        this.startTime = time;
     }
 
-    public void setEndTime(LocalDateTime time) {
-        this.endTime = time.plusYears(0);
-    }
+    //public void setEndTime(LocalDateTime time) {
+    // this.endTime = time.plusYears(0);
+    //}
 
     public void setDuration(long duration) {
         this.duration = Duration.ofMinutes(duration);
@@ -103,8 +100,8 @@ public class Task {
                 name,
                 status,
                 description,
-                startTime.format(formatter),
-                endTime.format(formatter),
+                startTime != null ? startTime.format(formatter) : "null",
+                getEndTime() != null ? getEndTime().format(formatter) : "null",
                 duration.toMinutes());
     }
 }

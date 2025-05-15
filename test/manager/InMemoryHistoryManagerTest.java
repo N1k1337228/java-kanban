@@ -20,13 +20,13 @@ class InMemoryHistoryManagerTest {
 
     @BeforeEach
     void createHistoryManager() {
-        task = new Task("12345", "45670987",100);
+        task = new Task("12345", "45670987");
         task.setId(1);
-        task1 = new Task("1", "4",100);
+        task1 = new Task("1", "4");
         task1.setId(2);
-        task2 = new Task("2", "5",100);
+        task2 = new Task("2", "5");
         task2.setId(3);
-        task3 = new Task("3", "6",100);
+        task3 = new Task("3", "6");
         task3.setId(4);
         manager = new InMemoryHistoryManager();
         manager.add(task1);
@@ -44,12 +44,12 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void addDuplicatesTest () {
-        Task taskDuplicate = new Task("12345", "45670987",100);
+    void addDuplicatesTest() {
+        Task taskDuplicate = new Task("12345", "45670987");
         taskDuplicate.setId(1);
         manager.add(task);
         manager.add(taskDuplicate);
-        assertEquals(4,manager.getHistory().size());
+        assertEquals(4, manager.getHistory().size());
     }
 
     @Test

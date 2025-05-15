@@ -6,8 +6,8 @@ public class SubTask extends Task {
 
     private int epicId;
 
-    public SubTask(String name, String description, int epicId,long taskExecutionTime) {
-        super(name, description,taskExecutionTime);
+    public SubTask(String name, String description, int epicId) {
+        super(name, description);
         this.epicId = epicId;
         type = TaskType.SUBTASK;
     }
@@ -24,8 +24,8 @@ public class SubTask extends Task {
                 name,
                 status,
                 description,
-                startTime.format(formatter),
-                endTime.format(formatter),
+                startTime != null ? startTime.format(formatter) : "null",
+                getEndTime() != null ? getEndTime().format(formatter) : "null",
                 duration.toMinutes(),
                 epicId);
     }

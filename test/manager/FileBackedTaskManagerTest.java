@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import taskclasses.Epic;
 import taskclasses.SubTask;
 import taskclasses.Task;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,15 +16,21 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileBackedTaskManagerTest {
+public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
+
     FileBackedTaskManager fileBackedTaskManager;
     Path file;
     Path tempFile;
+
+    public FileBackedTaskManagerTest() throws IOException {
+        super(new FileBackedTaskManager(Files.createTempFile("File", ".csv")));
+    }
 
     @BeforeEach
     public void createManagers() throws IOException {
         file = Files.createTempFile("testFile", ".csv");
         fileBackedTaskManager = new FileBackedTaskManager(file);
+
     }
 
     @Test
@@ -36,18 +43,13 @@ public class FileBackedTaskManagerTest {
     }
 
     @Test
-    public void saveSomeTasks() throws IOException  {
-        Task task1 = new Task("1", "aaa",10);
-        task1.setStartTime(LocalDateTime.of(2021,4,12,3,15));
-        task1.setEndTime(LocalDateTime.of(2021,4,12,3,25));
+    public void saveSomeTasks() throws IOException {
         fileBackedTaskManager.createTask(task1);
-        Task task2 = new Task("2", "bbb",20);
-        task2.setStartTime(LocalDateTime.of(2021,5,11,5,20));
-        task2.setEndTime(LocalDateTime.of(2021,5,11,5,40));
+        Task task2 = new Task("2", "bbb");
+        task2.setStartTime(LocalDateTime.of(2021, 5, 11, 5, 20));
         fileBackedTaskManager.createTask(task2);
-        Task task3 = new Task("3", "ccc",30);
-        task3.setStartTime(LocalDateTime.of(2021,9,3,13,25));
-        task3.setEndTime(LocalDateTime.of(2021,9,3,13,55));
+        Task task3 = new Task("3", "ccc");
+        task3.setStartTime(LocalDateTime.of(2021, 9, 3, 13, 25));
         fileBackedTaskManager.createTask(task3);
         List<String> lines = new ArrayList<>(Files.readAllLines(fileBackedTaskManager.getPath()));
         Assertions.assertEquals(4, lines.size());
@@ -58,18 +60,24 @@ public class FileBackedTaskManagerTest {
 
     @Test
     public void loadTasksTest() {
-        fileBackedTaskManager.createTask(new Task("1", "aaa",150));
-        fileBackedTaskManager.createSubTask(new SubTask("3", "ccc", 2,25));
-        fileBackedTaskManager.createEpic(new Epic("2", "bbb"));
+        Task task = new Task("drtyuio", "ftyuio");
+        task.setStartTime(LocalDateTime.of(2019, 4, 23, 3, 14));
+        Epic epic = new Epic("121", "w2322");
+        epic.setStartTime(LocalDateTime.of(2021, 11, 20, 4, 44));
+        fileBackedTaskManager.createTask(task);
+        fileBackedTaskManager.createEpic(epic);
+        SubTask subTask = new SubTask("werty", "iuytd", epic.getId());
+        subTask.setStartTime(LocalDateTime.now());
+        fileBackedTaskManager.createSubTask(subTask);
         FileBackedTaskManager fileLoad = FileBackedTaskManager.loadFromFile(file);
-        Assertions.assertEquals(fileBackedTaskManager.getTask(1),fileLoad.getTask(1));
-        Assertions.assertEquals(fileBackedTaskManager.getEpic(2),fileLoad.getEpic(2));
-        Assertions.assertEquals(fileBackedTaskManager.getSubTask(3),fileLoad.getSubTask(3));
+        Assertions.assertEquals(fileBackedTaskManager.getTask(1), fileLoad.getTask(1));
+        Assertions.assertEquals(fileBackedTaskManager.getEpic(2), fileLoad.getEpic(2));
+        Assertions.assertEquals(fileBackedTaskManager.getSubTask(3), fileLoad.getSubTask(3));
     }
 
     @Test
     void loadFromFileShouldThrowWhenMalformedData() throws IOException {
-        tempFile =  Files.createTempFile("tasks", ".csv");
+        tempFile = Files.createTempFile("tasks", ".csv");
         String badData = "1,TASK,Test,INVALID_STATUS,Desc,2023.01.01_10:00,2023.01.01_11:00,10,";
         Files.writeString(tempFile, badData);
         Assertions.assertThrows(IllegalArgumentException.class,

@@ -35,20 +35,22 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         if (!taskElements[5].equals("null")) {
             startTime = LocalDateTime.parse(taskElements[5], formatter);
         }
-        if (!taskElements[6].equals("null")) {
-            endTime = LocalDateTime.parse(taskElements[6], formatter);
-        }
+
         long duration = Long.parseLong(taskElements[7]);
         switch (TaskType.valueOf(type)) {
             case TASK:
-                Task task = new Task(name, description, duration);
+                Task task = new Task(name, description);
                 task.setId(id);
                 task.setStatus(Status.valueOf(status));
                 task.setStartTime(startTime);
-                task.setEndTime(endTime);
+
+
                 task.setDuration(duration);
                 return task;
             case EPIC:
+                if (!taskElements[6].equals("null")) {
+                    endTime = LocalDateTime.parse(taskElements[6], formatter);
+                }
                 Epic epic = new Epic(name, description);
                 epic.setId(id);
                 epic.setStatus(Status.valueOf(status));
@@ -57,11 +59,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 epic.setDuration(duration);
                 return epic;
             case SUBTASK:
-                SubTask subTask = new SubTask(name, description, Integer.parseInt(taskElements[8]), duration);
+                SubTask subTask = new SubTask(name, description, Integer.parseInt(taskElements[8]));
                 subTask.setId(id);
                 subTask.setStatus(Status.valueOf(status));
                 subTask.setStartTime(startTime);
-                subTask.setEndTime(endTime);
+
                 subTask.setDuration(duration);
                 return subTask;
             default:

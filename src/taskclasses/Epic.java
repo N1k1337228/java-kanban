@@ -4,16 +4,15 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-
+import java.util.Collections;
 
 public class Epic extends Task {
     private ArrayList<SubTask> subTasks = new ArrayList<>();
+    private LocalDateTime endTime;
 
     public Epic(String name, String description) {
-        super(name, description, 0);
+        super(name, description);
         type = TaskType.EPIC;
-        this.duration = Duration.ofMinutes(0);
-        this.startTime = null;
         this.endTime = null;
 
     }
@@ -21,46 +20,33 @@ public class Epic extends Task {
     public void addSubTasksId(SubTask subTask) {
         subTasks.add(subTask);
         updateDateTime();
-
     }
 
-    private void updateDateTime() {
-        epicDuration();
-        epicStartTime();
-        epicEndTime();
+    public void updateDateTime() {
+        epicStartAndEndTime();
     }
 
-    private void epicDuration() {
+    private void epicStartAndEndTime() {
         if (subTasks.isEmpty()) {
-            this.duration = Duration.ZERO;
+            this.startTime = null;
+            this.endTime = null;
+            return;
         }
-        long duration = getSubTasks().stream()
-                .mapToLong(time -> time.duration.toMinutes())
-                .sum();
+        ArrayList<LocalDateTime> startTimeSubTask = new ArrayList<>();
+        ArrayList<LocalDateTime> endTimeSubTask = new ArrayList<>();
+        long duration = 0;
+        for (SubTask subTask : subTasks) {
+            if (subTask.getStartTime() == null || subTask.duration == null) {
+                continue;
+            }
+            startTimeSubTask.add(subTask.getStartTime());
+            endTimeSubTask.add(subTask.getEndTime());
+            duration += subTask.duration.toMinutes();
+        }
+        startTime = Collections.min(startTimeSubTask);
+        endTime = Collections.max(endTimeSubTask);
         this.duration = Duration.ofMinutes(duration);
     }
-
-    private void epicStartTime() {
-        if (subTasks.isEmpty()) {
-            this.startTime = null;
-        }
-        LocalDateTime localDateTime = subTasks.stream()
-                .map(SubTask::getStartTime)
-                .min(LocalDateTime::compareTo).get();
-        this.startTime = localDateTime.plusYears(0);
-
-    }
-
-    private void epicEndTime() {
-        if (subTasks.isEmpty()) {
-            this.startTime = null;
-        }
-        LocalDateTime localDateTime = subTasks.stream()
-                .map(SubTask::getEndTime)
-                .max(LocalDateTime::compareTo).get();
-        this.endTime = localDateTime.plusYears(0);
-    }
-
 
     public ArrayList<SubTask> getSubTasks() {
         return subTasks;
@@ -68,24 +54,12 @@ public class Epic extends Task {
 
     public void removeSubTasksId() {
         subTasks.clear();
+        updateDateTime();
     }
 
-    @Override
-    public void setStartTime(LocalDateTime time) {
-        if (time == null) {
-            this.startTime = null;
-        } else {
-            this.startTime = time.plusYears(0);
-        }
-    }
-
-    @Override
     public void setEndTime(LocalDateTime time) {
-        if (time == null) {
-            this.endTime = null;
-        } else {
-            this.endTime = time.plusYears(0);
-        }
+        this.endTime = time;
+
     }
 
     @Override

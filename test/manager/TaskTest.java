@@ -18,20 +18,20 @@ public class TaskTest {
 
     @BeforeEach
     void createTaskManager() {
-        task1 = new Task("Задача 1", "Описание задачи 1",100);
-        task2 = new Task("Задача 2", "Описание задачи 2",100);
+        task1 = new Task("Задача 1", "Описание задачи 1");
+        task2 = new Task("Задача 2", "Описание задачи 2");
 
         epic2 = new Epic("Задача 2", "Описание задачи 2");
         epic1 = new Epic("Эпик 1", "Описание эпика 1");
         epic1.setId(1);
 
-        subTask1 = new SubTask("Подзадача 1.1", "Описание", epic1.getId(),10);
-        subTask2 = new SubTask("Подзадача 1.2", "Описание", epic1.getId(),12);
+        subTask1 = new SubTask("Подзадача 1.1", "Описание", epic1.getId());
+        subTask2 = new SubTask("Подзадача 1.2", "Описание", epic1.getId());
     }
 
     @Test
     void taskIdTest() {
-        task1 = new Task("Задача 1", "Описание задачи 1",60);
+        task1 = new Task("Задача 1", "Описание задачи 1");
         task2.setId(task1.getId());
         boolean test = task1.equals(task2);
         Assertions.assertTrue(test);
@@ -47,9 +47,9 @@ public class TaskTest {
 
     @Test
     void subTaskIdTest() {
-        subTask1 = new SubTask("Задача 1", "Описание задачи 1", epic1.getId(),34);
-        subTask2 = new SubTask("Задача 2", "Описание задачи 2", epic1.getId(),45);
-        task2 = new Task("Задача 2", "Описание задачи 2",75);
+        subTask1 = new SubTask("Задача 1", "Описание задачи 1", epic1.getId());
+        subTask2 = new SubTask("Задача 2", "Описание задачи 2", epic1.getId());
+        task2 = new Task("Задача 2", "Описание задачи 2");
         subTask2.setId(subTask1.getId());
         boolean test = subTask1.equals(subTask2);
         Assertions.assertTrue(test);

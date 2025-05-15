@@ -10,8 +10,8 @@ public class Main {
         InMemoryTaskManager taskManager = new InMemoryTaskManager(); // Менеджер задач
 
         // Создаём две обычные задачи (ID и статус создаются автоматически)
-        Task task1 = new Task("Задача 1", "Описание задачи 1",100);
-        Task task2 = new Task("Задача 2", "Описание задачи 2",120);
+        Task task1 = new Task("Задача 1", "Описание задачи 1");
+        Task task2 = new Task("Задача 2", "Описание задачи 2");
         taskManager.createTask(task1);
         taskManager.createTask(task2);
 
@@ -32,9 +32,9 @@ public class Main {
         int epic2Id = epic2.getId();
 
 
-        SubTask subTask1 = new SubTask("Подзадача 1.1", "Описание", epic1Id,10);
-        SubTask subTask2 = new SubTask("Подзадача 1.2", "Описание", epic1Id,15);
-        SubTask subTask3 = new SubTask("Подзадача 2.1", "Описание", epic2Id,25);
+        SubTask subTask1 = new SubTask("Подзадача 1.1", "Описание", epic1Id);
+        SubTask subTask2 = new SubTask("Подзадача 1.2", "Описание", epic1Id);
+        SubTask subTask3 = new SubTask("Подзадача 2.1", "Описание", epic2Id);
 
 
         taskManager.createSubTask(subTask1);
