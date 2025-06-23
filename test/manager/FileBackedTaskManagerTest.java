@@ -2,7 +2,6 @@ package manager;
 
 import exceptons.ManagerSaveException;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import taskclasses.Epic;
 import taskclasses.SubTask;
@@ -17,45 +16,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
-
-
-    Path file;
+    Path file = Files.createTempFile("testFile", ".csv");
     Path tempFile;
 
     public FileBackedTaskManagerTest() throws IOException {
         super(new FileBackedTaskManager(Files.createTempFile("File", ".csv")));
-    }
-
-    @BeforeEach
-    public void createManagers() throws IOException {
-        file = Files.createTempFile("testFile", ".csv");
         taskManager = new FileBackedTaskManager(file);
-
     }
 
     @Test
-    public void saveEmptyFileAndLoadEmptyFile() {
-        FileBackedTaskManager fileBackedTaskManager1 = FileBackedTaskManager.loadFromFile(file);
+    public void saveEmptyFileAndLoadEmptyFile() throws IOException {
+        Path emptyFile = Files.createTempFile("emptyFile", ".csv");
+        FileBackedTaskManager fileBackedTaskManager1 = FileBackedTaskManager.loadFromFile(emptyFile);
         Assertions.assertTrue(fileBackedTaskManager1.taskMap.isEmpty());
         Assertions.assertTrue(fileBackedTaskManager1.epicMap.isEmpty());
         Assertions.assertTrue(fileBackedTaskManager1.subTaskMap.isEmpty());
-
     }
 
     @Test
     public void saveSomeTasks() throws IOException {
-        taskManager.createTask(task1);
-        Task task2 = new Task("2", "bbb");
-        task2.setStartTime(LocalDateTime.of(2021, 5, 11, 5, 20));
-        taskManager.createTask(task2);
-        Task task3 = new Task("3", "ccc");
-        task3.setStartTime(LocalDateTime.of(2021, 9, 3, 13, 25));
-        taskManager.createTask(task3);
         List<String> lines = new ArrayList<>(Files.readAllLines(taskManager.getPath()));
-        Assertions.assertEquals(4, lines.size());
+        System.out.println(lines);
+        Assertions.assertEquals(6, lines.size());
         Assertions.assertEquals(taskManager.getTask(1).toString().trim(), lines.get(1));
-        Assertions.assertEquals(taskManager.getTask(2).toString().trim(), lines.get(2));
-        Assertions.assertEquals(taskManager.getTask(3).toString().trim(), lines.get(3));
+        Assertions.assertEquals(taskManager.getEpic(2).toString().trim(), lines.get(2));
+        Assertions.assertEquals(taskManager.getSubTask(3).toString().trim(), lines.get(3));
+        Assertions.assertEquals(taskManager.getSubTask(4).toString().trim(), lines.get(4));
+        Assertions.assertEquals(taskManager.getSubTask(5).toString().trim(), lines.get(5));
     }
 
     @Test
