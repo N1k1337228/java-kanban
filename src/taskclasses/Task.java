@@ -47,10 +47,6 @@ public class Task {
         this.startTime = time;
     }
 
-    //public void setEndTime(LocalDateTime time) {
-    // this.endTime = time.plusYears(0);
-    //}
-
     public void setDuration(long duration) {
         this.duration = Duration.ofMinutes(duration);
     }

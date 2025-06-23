@@ -41,11 +41,10 @@ public class Epic extends Task {
             }
             startTimeSubTask.add(subTask.getStartTime());
             endTimeSubTask.add(subTask.getEndTime());
-            duration += subTask.duration.toMinutes();
         }
         startTime = Collections.min(startTimeSubTask);
         endTime = Collections.max(endTimeSubTask);
-        this.duration = Duration.ofMinutes(duration);
+        this.duration = Duration.between(startTime, endTime);
     }
 
     public ArrayList<SubTask> getSubTasks() {
@@ -59,7 +58,6 @@ public class Epic extends Task {
 
     public void setEndTime(LocalDateTime time) {
         this.endTime = time;
-
     }
 
     @Override

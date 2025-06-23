@@ -12,8 +12,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public abstract class TaskManagerTest<T extends TaskManager> {
-
-    public TaskManager taskManager;
+    public T taskManager;
     Epic epic1;
     Task task1;
     SubTask subTask1;
@@ -28,7 +27,6 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     void createTaskManager() {
         task1 = new Task("Задача 1", "Описание задачи 1");
         task1.setStartTime(LocalDateTime.of(2020, 4, 12, 3, 55));
-
         taskManager.createTask(task1);
         epic1 = new Epic("Эпик 1", "Описание эпика 1");
         taskManager.createEpic(epic1);
@@ -154,5 +152,18 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         System.out.println(subTasks);
         System.out.println(taskManager.getSubTaskListOfEpicOnId(epic1.getId()));
         Assertions.assertEquals(subTasks, taskManager.getSubTaskListOfEpicOnId(epic1.getId()));
+    }
+
+    @Test
+    public void checkIntersectionTasksTest() {
+        // Проверить создаётся ли задача т.к. если нет, то она пересекается с какой - то другой задачей
+        InMemoryTaskManager manager = new InMemoryTaskManager();
+        Task task2 = new Task("rrr", "hhh");
+        task2.setStartTime(LocalDateTime.of(2020, 2, 15, 10, 15));
+        task2.setDuration(15);
+        manager.createTask(task1);
+        manager.createTask(task2);
+        boolean result = manager.taskMap.isEmpty();
+        Assertions.assertFalse(result);
     }
 }

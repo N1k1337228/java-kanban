@@ -87,16 +87,5 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
         Assertions.assertEquals(Status.IN_PROGRESS, epic1.getStatus());
     }
 
-    @Test
-    public void checkIntersectionTasksTest() {
-        // Проверить создаётся ли задача т.к. если нет, то она пересекается с какой - то другой задачей
-        InMemoryTaskManager manager = new InMemoryTaskManager();
-        Task task2 = new Task("rrr", "hhh");
-        task2.setStartTime(LocalDateTime.of(2020, 2, 15, 10, 15));
-        task2.setDuration(15);
-        manager.createTask(task1);
-        manager.createTask(task2);
-        boolean result = manager.taskMap.isEmpty();
-        Assertions.assertFalse(result);
-    }
+
 }
