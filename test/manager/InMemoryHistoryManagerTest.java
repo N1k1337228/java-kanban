@@ -44,6 +44,15 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
+    void addDuplicatesTest() {
+        Task taskDuplicate = new Task("12345", "45670987");
+        taskDuplicate.setId(1);
+        manager.add(task);
+        manager.add(taskDuplicate);
+        assertEquals(4, manager.getHistory().size());
+    }
+
+    @Test
     void getHistoryTest() {
         manager = new InMemoryHistoryManager();
         manager.add(task);

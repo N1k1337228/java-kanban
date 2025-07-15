@@ -1,5 +1,7 @@
 package taskclasses;
 
+import java.time.format.DateTimeFormatter;
+
 public class SubTask extends Task {
 
     private int epicId;
@@ -16,11 +18,15 @@ public class SubTask extends Task {
 
     @Override
     public String toString() {
-        return String.format("%d,SUBTASK,%s,%s,%s,%d%n",
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd_HH:mm");
+        return String.format("%d,SUBTASK,%s,%s,%s,%s,%s,%d,%d%n",
                 id,
                 name,
                 status,
                 description,
+                startTime != null ? startTime.format(formatter) : "null",
+                getEndTime() != null ? getEndTime().format(formatter) : "null",
+                duration.toMinutes(),
                 epicId);
     }
 }

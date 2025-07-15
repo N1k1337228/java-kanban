@@ -4,7 +4,6 @@ import taskclasses.Task;
 
 import java.util.ArrayList;
 
-
 public class InMemoryHistoryManager implements HistoryManager {
     private DoublyLinkedList historyTaskList = new DoublyLinkedList();
 
