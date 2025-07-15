@@ -16,6 +16,7 @@ public class BaseHttpHandler {
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .registerTypeAdapter(Duration.class, new DurationAdapter())
             .create();
+
     protected void sendText(HttpExchange exchange, Object text) throws IOException {
         if (text == null) {
             text = Collections.emptyList();
