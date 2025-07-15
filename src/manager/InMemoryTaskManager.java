@@ -25,7 +25,7 @@ public class InMemoryTaskManager implements TaskManager {
         return idCounter++;
     }
 
-    public List<Task> getPrioritizedTasks() {
+    public ArrayList<Task> getPrioritizedTasks() {
         TreeSet<Task> prioritizedTasks = new TreeSet<>((Task task1, Task task2) ->
                 task1.getStartTime().compareTo(task2.getStartTime()));
         prioritizedTasks.addAll(taskMap.values());
@@ -33,7 +33,7 @@ public class InMemoryTaskManager implements TaskManager {
         return new ArrayList<>(prioritizedTasks);
     }
 
-    private boolean checkIntersectionTasks(Task task) {
+    public boolean checkIntersectionTasks(Task task) {
         return getPrioritizedTasks().stream()
                 .allMatch(task1 -> task.getEndTime().isBefore(task1.getStartTime()) ||
                         task.getStartTime().isAfter(task1.getEndTime()));

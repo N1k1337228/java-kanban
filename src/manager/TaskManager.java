@@ -1,51 +1,46 @@
 package manager;
 
+import exceptons.ManagerSaveException;
+import exceptons.NotFoundException;
 import taskclasses.Epic;
 import taskclasses.SubTask;
 import taskclasses.Task;
-
 import java.util.ArrayList;
 
 public interface TaskManager {
-    public void createTask(Task task);
+    // Создание задач
+    void createTask(Task task) ;
+    void createEpic(Epic epic) ;
+    void createSubTask(SubTask subTask) ;
 
-    public void createEpic(Epic epic);
+    // Обновление задач
+    void updateTask(Task task) throws NotFoundException;
+    void updateEpic(Epic epic) throws NotFoundException;
+    void updateSabTask(SubTask subTask) throws NotFoundException;
 
-    public void createSubTask(SubTask subTask);
+    // Получение списков задач
+    ArrayList<Task> getTaskList();
+    ArrayList<Epic> getEpicList();
+    ArrayList<SubTask> getSubTaskList();
 
-    public void updateTask(Task task);
+    // Удаление всех задач
+    void removeTask();
+    void removeEpics();
+    void removeSubTask();
 
-    public void updateEpic(Epic epic);
+    // Получение задач по ID
+    Task getTask(int id) throws NotFoundException;
+    Epic getEpic(int id) throws NotFoundException;
+    SubTask getSubTask(int id) throws NotFoundException;
 
-    public void updateSabTask(SubTask subTask);
+    // Удаление задач по ID
+    void removeTaskOnId(int id) throws NotFoundException, ManagerSaveException;
+    void removeEpicOnId(int id) throws NotFoundException, ManagerSaveException;
+    void removeSubTaskOnId(int id) throws NotFoundException, ManagerSaveException;
 
-    public ArrayList<Task> getTaskList();
+    // Получение подзадач эпика
+    ArrayList<SubTask> getSubTaskListOfEpicOnId(int id) throws NotFoundException;
 
-    public ArrayList<Epic> getEpicList();
-
-    public ArrayList<SubTask> getSubTaskList();
-
-    public void removeTask();
-
-    public void removeEpics();
-
-    public void removeSubTask();
-
-    public Task getTask(int id);
-
-    public SubTask getSubTask(int id);
-
-    public Epic getEpic(int id);
-
-    public void removeTaskOnId(int id);
-
-    public ArrayList<SubTask> getSubTaskListOfEpicOnId(int id);
-
-    public void removeEpicOnId(int id);
-
-    public void removeSubTaskOnId(int id);
-
-    public ArrayList<Task> getHistory();
-
-
+    // История просмотров
+    ArrayList<Task> getHistory();
 }

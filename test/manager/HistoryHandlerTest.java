@@ -1,0 +1,59 @@
+package manager;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import handlers.DurationAdapter;
+import handlers.LocalDateTimeAdapter;
+import handlers.TasksListTypeToken;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import taskclasses.Task;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class HistoryHandlerTest {
+    private HttpTaskServer taskServer;
+    private InMemoryTaskManager taskManager;
+    private final Gson gson = new GsonBuilder()
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+            .registerTypeAdapter(Duration.class, new DurationAdapter())
+            .create();
+    private final HttpClient httpClient = HttpClient.newHttpClient();
+
+    @BeforeEach
+    void setUp() throws IOException {
+        taskManager = new InMemoryTaskManager();
+        taskServer = new HttpTaskServer(taskManager);
+        taskServer.start();
+    }
+
+    @AfterEach
+    void tearDown() {
+        taskServer.stop();
+    }
+
+    @Test
+    public void getHistoryTest() throws IOException, InterruptedException {
+        Task task = new Task("Task", "Description");
+        taskManager.createTask(task);
+        taskManager.getTask(task.getId());
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/history/"))
+                .GET()
+                .build();
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals(200, response.statusCode());
+        ArrayList<Task> receivedTask = gson.fromJson(response.body(), new TasksListTypeToken().getType());
+        assertEquals(1, receivedTask.size());
+    }
+}
