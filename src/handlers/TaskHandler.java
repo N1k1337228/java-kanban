@@ -45,7 +45,7 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
     }
 
     private void getTasksIdHandler(HttpExchange exchange) throws IOException {
-        if (getId(exchange).isEmpty()){
+        if (getId(exchange).isEmpty()) {
             sendNotFound(exchange);
             return;
         }
