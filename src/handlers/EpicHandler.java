@@ -2,7 +2,7 @@ package handlers;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import manager.InMemoryTaskManager;
+import manager.TaskManager;
 import taskclasses.Epic;
 
 import java.io.IOException;
@@ -11,9 +11,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 public class EpicHandler extends BaseHttpHandler implements HttpHandler {
-    protected InMemoryTaskManager manager;
+    protected TaskManager manager;
 
-    public EpicHandler(InMemoryTaskManager manager) {
+    public EpicHandler(TaskManager manager) {
         this.manager = manager;
     }
 
@@ -42,20 +42,21 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
     }
 
     private void getEpicIdHandler(HttpExchange exchange) throws IOException {
-        if (getId(exchange).isEmpty() || manager.getEpic(getId(exchange).get()) == null) {
+        if (getId(exchange).isEmpty()) {
             sendNotFound(exchange);
             return;
         }
-        int id = getId(exchange).get();
-        sendText(exchange, manager.getEpic(id));
+        Epic epic = manager.getEpic(getId(exchange).get());
+        if (epic == null) {
+            sendNotFound(exchange);
+            return;
+        }
+        sendText(exchange, epic);
     }
 
     private void postEpicHandler(HttpExchange exchange) throws IOException {
         Epic epic = readRequestBody(exchange);
-        if (!manager.checkIntersectionTasks(epic)) {
-            sendHasInteractions(exchange);
-            return;
-        }
+
         if (epic.getId() == 0) {
             manager.createEpic(epic);
             sendGoodResponse(exchange, 201);
@@ -78,7 +79,7 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
             return;
         }
         int id = getId(exchange).get();
-        sendText(exchange, manager.getEpic(id).getSubTasks());
+        sendText(exchange, manager.getSubTaskListOfEpicOnId(id));
     }
 
     private String getHttpEndPoint(HttpExchange exchange) {

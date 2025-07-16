@@ -1,7 +1,6 @@
 package manager;
 
 import com.google.gson.Gson;
-
 import com.google.gson.GsonBuilder;
 import handlers.DurationAdapter;
 import handlers.LocalDateTimeAdapter;
@@ -24,18 +23,19 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TaskHandlerTest {
-    private HttpTaskServer taskServer;
-    private InMemoryTaskManager taskManager;
+    private final InMemoryTaskManager taskManager = new InMemoryTaskManager();
+    private final HttpTaskServer taskServer = new HttpTaskServer(taskManager);
     private final Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .registerTypeAdapter(Duration.class, new DurationAdapter())
             .create();
     private final HttpClient httpClient = HttpClient.newHttpClient();
 
+    public TaskHandlerTest() throws IOException {
+    }
+
     @BeforeEach
-    void setUp() throws IOException {
-        taskManager = new InMemoryTaskManager(); // Используем InMemoryTaskManager
-        taskServer = new HttpTaskServer(taskManager);
+    void setUp() {
         taskServer.start();
     }
 

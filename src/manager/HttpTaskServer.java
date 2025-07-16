@@ -2,12 +2,13 @@ package manager;
 
 import com.sun.net.httpserver.HttpServer;
 import handlers.*;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
 public class HttpTaskServer {
     private final HttpServer server;
-    public final InMemoryTaskManager taskManager;
+    private final TaskManager taskManager;
 
     public HttpTaskServer(InMemoryTaskManager manager) throws IOException {
         this.taskManager = manager;
@@ -17,6 +18,10 @@ public class HttpTaskServer {
         server.createContext("/epics/", new EpicHandler(taskManager));
         server.createContext("/history/", new HistoryHandler(taskManager));
         server.createContext("/prioritized/", new PrioritizedHandler(taskManager));
+    }
+
+    public TaskManager getManager() {
+        return taskManager;
     }
 
     public void start() {

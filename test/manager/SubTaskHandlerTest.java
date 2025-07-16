@@ -27,18 +27,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SubTaskHandlerTest {
     Epic epic;
-    private HttpTaskServer taskServer;
-    private InMemoryTaskManager taskManager;
+    private InMemoryTaskManager taskManager = new InMemoryTaskManager();
+    private HttpTaskServer taskServer = new HttpTaskServer(taskManager);
     private final Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .registerTypeAdapter(Duration.class, new DurationAdapter())
             .create();
     private final HttpClient httpClient = HttpClient.newHttpClient();
 
+    public SubTaskHandlerTest() throws IOException {
+    }
+
     @BeforeEach
-    void setUp() throws IOException {
-        taskManager = new InMemoryTaskManager(); // Используем InMemoryTaskManager
-        taskServer = new HttpTaskServer(taskManager);
+    void setUp() {
         epic = new Epic("333", "444");
         taskManager.createEpic(epic);
         taskServer.start();
@@ -63,7 +64,7 @@ public class SubTaskHandlerTest {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(201, response.statusCode());
         assertFalse(taskManager.getSubTaskList().isEmpty(), "Задача не добавлена в менеджер");
-        SubTask savedSubTask = taskServer.taskManager.getSubTask(2);
+        SubTask savedSubTask = taskServer.getManager().getSubTask(2);
         assertNotNull(savedSubTask, "Задача не найдена в менеджере");
         assertEquals("subTask", savedSubTask.getName(), "Название задачи не совпадает");
     }

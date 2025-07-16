@@ -22,18 +22,19 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PrioritizedHandlerTest {
-    private HttpTaskServer taskServer;
-    private InMemoryTaskManager taskManager;
+    private InMemoryTaskManager taskManager = new InMemoryTaskManager();
+    private HttpTaskServer taskServer = new HttpTaskServer(taskManager);
     private final Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .registerTypeAdapter(Duration.class, new DurationAdapter())
             .create();
     private final HttpClient httpClient = HttpClient.newHttpClient();
 
+    public PrioritizedHandlerTest() throws IOException {
+    }
+
     @BeforeEach
-    void setUp() throws IOException {
-        taskManager = new InMemoryTaskManager();
-        taskServer = new HttpTaskServer(taskManager);
+    void setUp() {
         taskServer.start();
     }
 

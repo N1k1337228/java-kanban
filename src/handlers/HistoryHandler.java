@@ -2,15 +2,14 @@ package handlers;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import manager.InMemoryTaskManager;
-
+import manager.TaskManager;
 
 import java.io.IOException;
 
 public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
-    protected InMemoryTaskManager manager;
+    protected TaskManager manager;
 
-    public HistoryHandler(InMemoryTaskManager manager) {
+    public HistoryHandler(TaskManager manager) {
         this.manager = manager;
     }
 
@@ -18,5 +17,4 @@ public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         sendText(exchange, manager.getHistory());
     }
-
 }

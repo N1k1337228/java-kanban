@@ -2,7 +2,8 @@ package handlers;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import manager.InMemoryTaskManager;
+import exceptons.NotFoundException;
+import manager.TaskManager;
 import taskclasses.Task;
 
 import java.io.IOException;
@@ -12,9 +13,9 @@ import java.util.Optional;
 
 
 public class TaskHandler extends BaseHttpHandler implements HttpHandler {
-    InMemoryTaskManager manager;
+    TaskManager manager;
 
-    public TaskHandler(InMemoryTaskManager manager) {
+    public TaskHandler(TaskManager manager) {
         this.manager = manager;
     }
 
@@ -44,27 +45,32 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
     }
 
     private void getTasksIdHandler(HttpExchange exchange) throws IOException {
-        if (getId(exchange).isEmpty() || manager.getTask(getId(exchange).get()) == null) {
+        if (getId(exchange).isEmpty()){
             sendNotFound(exchange);
             return;
         }
-        int id = getId(exchange).get();
-        sendText(exchange, manager.getTask(id));
+        Task task = manager.getTask(getId(exchange).get());
+        if (task == null) {
+            sendNotFound(exchange);
+            return;
+        }
+        sendText(exchange, task);
     }
 
     private void postTasksHandler(HttpExchange exchange) throws IOException {
         Task task = readRequestBody(exchange);
-        if (!manager.checkIntersectionTasks(task)) {
+        try {
+            if (task.getId() == 0) {
+                manager.createTask(task);
+                sendGoodResponse(exchange, 201);
+            } else {
+                manager.updateTask(task);
+                sendGoodResponse(exchange, 201);
+            }
+        } catch (NotFoundException e) {
             sendHasInteractions(exchange);
-            return;
         }
-        if (task.getId() == 0) {
-            manager.createTask(task);
-            sendGoodResponse(exchange, 201);
-        } else {
-            manager.updateTask(task);
-            sendGoodResponse(exchange, 201);
-        }
+
     }
 
     private void deleteTaskHandler(HttpExchange exchange) throws IOException {

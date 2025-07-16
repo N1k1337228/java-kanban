@@ -2,7 +2,9 @@ package handlers;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import manager.InMemoryTaskManager;
+import exceptons.NotFoundException;
+
+import manager.TaskManager;
 import taskclasses.SubTask;
 
 import java.io.IOException;
@@ -11,9 +13,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 public class SubTasksHandler extends BaseHttpHandler implements HttpHandler {
-    protected InMemoryTaskManager manager;
+    protected TaskManager manager;
 
-    public SubTasksHandler(InMemoryTaskManager manager) {
+    public SubTasksHandler(TaskManager manager) {
         this.manager = manager;
     }
 
@@ -44,26 +46,30 @@ public class SubTasksHandler extends BaseHttpHandler implements HttpHandler {
 
 
     private void getSubTasksIdHandler(HttpExchange exchange) throws IOException {
-        if (getId(exchange).isEmpty() || manager.getSubTask(getId(exchange).get()) == null) {
+        if (getId(exchange).isEmpty()) {
             sendNotFound(exchange);
             return;
         }
-        int id = getId(exchange).get();
-        sendText(exchange, manager.getSubTask(id));
+        SubTask subTask = manager.getSubTask(getId(exchange).get());
+        if (subTask == null) {
+            sendNotFound(exchange);
+            return;
+        }
+        sendText(exchange, subTask);
     }
 
     private void postSubTasksHandler(HttpExchange exchange) throws IOException {
         SubTask subTask = readRequestBody(exchange);
-        if (!manager.checkIntersectionTasks(subTask)) {
+        try {
+            if (subTask.getId() == 0) {
+                manager.createSubTask(subTask);
+                sendGoodResponse(exchange, 201);
+            } else {
+                manager.updateSabTask(subTask);
+                sendGoodResponse(exchange, 201);
+            }
+        } catch (NotFoundException e) {
             sendHasInteractions(exchange);
-            return;
-        }
-        if (subTask.getId() == 0) {
-            manager.createSubTask(subTask);
-            sendGoodResponse(exchange, 201);
-        } else {
-            manager.updateSabTask(subTask);
-            sendGoodResponse(exchange, 201);
         }
     }
 

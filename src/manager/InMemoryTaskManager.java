@@ -1,5 +1,6 @@
 package manager;
 
+import exceptons.NotFoundException;
 import taskclasses.Epic;
 import taskclasses.Status;
 import taskclasses.SubTask;
@@ -33,7 +34,7 @@ public class InMemoryTaskManager implements TaskManager {
         return new ArrayList<>(prioritizedTasks);
     }
 
-    public boolean checkIntersectionTasks(Task task) {
+    private boolean checkIntersectionTasks(Task task) {
         return getPrioritizedTasks().stream()
                 .allMatch(task1 -> task.getEndTime().isBefore(task1.getStartTime()) ||
                         task.getStartTime().isAfter(task1.getEndTime()));
@@ -107,7 +108,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void createTask(Task task) {
         if (!checkIntersectionTasks(task)) {
-            return;
+            throw new NotFoundException("Задача пересекается с другой");
         }
         task.setId(generateId());
         taskMap.put(task.getId(), task);
@@ -122,7 +123,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void createSubTask(SubTask subTask) {
         if (!checkIntersectionTasks(subTask)) {
-            return;
+            throw new NotFoundException("Подзадача пересекается с другой");
         }
         subTask.setId(generateId());
         subTaskMap.put(subTask.getId(), subTask);
