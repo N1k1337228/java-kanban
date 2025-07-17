@@ -51,6 +51,10 @@ public class Task {
         this.duration = Duration.ofMinutes(duration);
     }
 
+    public Duration getDuration() {
+        return duration;
+    }
+
     public int getId() {
         return id;
     }
