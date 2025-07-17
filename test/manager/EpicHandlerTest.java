@@ -6,9 +6,7 @@ import handlers.DurationAdapter;
 import handlers.EpicsTypeToken;
 import handlers.LocalDateTimeAdapter;
 import handlers.SubTastTypeToken;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import taskclasses.Epic;
 import taskclasses.SubTask;
@@ -24,11 +22,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class EpicHandlerTest {
-    private InMemoryTaskManager taskManager = new InMemoryTaskManager();
-    private HttpTaskServer taskServer = new HttpTaskServer(taskManager);
+public class EpicHandlerTest extends BaseHandler {
     private final Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .registerTypeAdapter(Duration.class, new DurationAdapter())
@@ -36,16 +31,6 @@ public class EpicHandlerTest {
     private final HttpClient httpClient = HttpClient.newHttpClient();
 
     public EpicHandlerTest() throws IOException {
-    }
-
-    @BeforeEach
-    void setUp() {
-        taskServer.start();
-    }
-
-    @AfterEach
-    void tearDown() {
-        taskServer.stop();
     }
 
     @Test

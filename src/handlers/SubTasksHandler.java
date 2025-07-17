@@ -13,7 +13,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 public class SubTasksHandler extends BaseHttpHandler implements HttpHandler {
-    protected TaskManager manager;
 
     public SubTasksHandler(TaskManager manager) {
         this.manager = manager;

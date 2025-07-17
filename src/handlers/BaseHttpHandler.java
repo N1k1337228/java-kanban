@@ -3,6 +3,7 @@ package handlers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
+import manager.TaskManager;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -12,6 +13,8 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 
 public class BaseHttpHandler {
+    protected TaskManager manager;
+
     protected final Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .registerTypeAdapter(Duration.class, new DurationAdapter())

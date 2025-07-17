@@ -20,10 +20,6 @@ public class HttpTaskServer {
         server.createContext("/prioritized/", new PrioritizedHandler(taskManager));
     }
 
-    public TaskManager getManager() {
-        return taskManager;
-    }
-
     public void start() {
         server.start();
     }

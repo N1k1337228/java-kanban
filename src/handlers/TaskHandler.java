@@ -13,8 +13,6 @@ import java.util.Optional;
 
 
 public class TaskHandler extends BaseHttpHandler implements HttpHandler {
-    TaskManager manager;
-
     public TaskHandler(TaskManager manager) {
         this.manager = manager;
     }

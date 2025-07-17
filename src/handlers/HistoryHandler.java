@@ -7,7 +7,6 @@ import manager.TaskManager;
 import java.io.IOException;
 
 public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
-    protected TaskManager manager;
 
     public HistoryHandler(TaskManager manager) {
         this.manager = manager;

@@ -5,8 +5,6 @@ import com.google.gson.GsonBuilder;
 import handlers.DurationAdapter;
 import handlers.LocalDateTimeAdapter;
 import handlers.TasksListTypeToken;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import taskclasses.Task;
 
@@ -21,9 +19,7 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class HistoryHandlerTest {
-    private InMemoryTaskManager taskManager = new InMemoryTaskManager();
-    private HttpTaskServer taskServer = new HttpTaskServer(taskManager);
+public class HistoryHandlerTest extends BaseHandler {
     private final Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .registerTypeAdapter(Duration.class, new DurationAdapter())
@@ -31,16 +27,6 @@ public class HistoryHandlerTest {
     private final HttpClient httpClient = HttpClient.newHttpClient();
 
     public HistoryHandlerTest() throws IOException {
-    }
-
-    @BeforeEach
-    void setUp() throws IOException {
-        taskServer.start();
-    }
-
-    @AfterEach
-    void tearDown() {
-        taskServer.stop();
     }
 
     @Test
